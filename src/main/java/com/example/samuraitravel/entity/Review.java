@@ -13,7 +13,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name="review")
+@Table(name="reviews")
 @Data
 public class Review {
 	@Id
