@@ -220,20 +220,21 @@
 															</p>
 															<p class="card-text">
 																<span
-																	th:if="${review.getStar()=='1'}">&#9733;&#9734;&#9734;&#9734;&#9734;</span>
+																	th:if="${review.getScore()=='1'}">&#9733;&#9734;&#9734;&#9734;&#9734;</span> 
 																<span
-																	th:if="${review.getStar()=='2'}">&#9733;&#9733;&#9734;&#9734;&#9734;</span>
+																	th:if="${review.getScore()=='2'}">&#9733;&#9733;&#9734;&#9734;&#9734;</span>
 																<span
-																	th:if="${review.getStar()=='3'}">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
+																	th:if="${review.getScore()=='3'}">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
 																<span
-																	th:if="${review.getStar()=='4'}">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+																	th:if="${review.getScore()=='4'}">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
 																<span
-																	th:if="${review.getStar()=='5'}">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+																	th:if="${review.getScore()=='5'}">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
 															</p>
 															<p class="card-text">
 																<h8 class="card-text mb-3"
-																	th:text="${review.getReview()}"></h8>
+																	th:text="${review.getContent()}"></h8>
 															</p>
+
 														</div>
 													</div>
 												</div>
@@ -288,3 +289,5 @@
 </body>
 
 </html>
+
+<!-- テーブルのgetContentを使う、コントローラも考えて-->
