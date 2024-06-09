@@ -29,12 +29,11 @@ public class Review {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
+	@Column(name="content")
+	private String content;
 	
-	@Column(name = "star")
-	private String star;
-	
-	@Column(name ="review")
-	private String review;
+	@Column(name ="score")
+	private String score;
 	
 	
 	@Column(name = "created_at", insertable = false, updatable = false)
@@ -44,3 +43,5 @@ public class Review {
 	private Timestamp updatedAt;
 
 }
+
+

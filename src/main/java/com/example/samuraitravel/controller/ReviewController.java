@@ -91,7 +91,7 @@ public class ReviewController {
 			             Model model) {
 		  House house = houseRepository.getReferenceById(houseId);
 	      Review review = reviewRepository.getReferenceById(id);
-	      EditForm EditForm = new EditForm(review.getId(),house.getId(),review.getStar(), review.getReview());
+	      EditForm EditForm = new EditForm(review.getId(),house.getId(),review.getScore(), review.getScore());
 	      model.addAttribute("house", house);
 	      model.addAttribute("EditForm", EditForm);
 	      return "review/edit";
@@ -118,5 +118,8 @@ public class ReviewController {
 		   redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
 		   return "redirect:/houses/{houseId}";
 	  }
+	  
+	  
+
 
 }

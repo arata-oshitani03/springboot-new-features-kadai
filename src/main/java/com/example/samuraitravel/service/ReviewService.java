@@ -33,8 +33,8 @@ public class ReviewService {
 		User user = userRepository.getReferenceById(RegisterForm.getUserId());
 		review.setHouse(house);
 		review.setUser(user);
-		review.setStar(RegisterForm.getStar());
-		review.setReview(RegisterForm.getReview());
+		review.setScore(RegisterForm.getStar());
+		review.setScore(RegisterForm.getReview());
 		reviewRepository.save(review);
 	}
 
@@ -42,8 +42,8 @@ public class ReviewService {
 	@Transactional
 	public void update(EditForm EditForm) {
 		Review review = reviewRepository.getReferenceById(EditForm.getId());
-		review.setStar(EditForm.getStar());
-		review.setReview(EditForm.getReview());
+		review.setScore(EditForm.getStar());
+		review.setScore(EditForm.getReview());
 		reviewRepository.save(review);
 	}
 
