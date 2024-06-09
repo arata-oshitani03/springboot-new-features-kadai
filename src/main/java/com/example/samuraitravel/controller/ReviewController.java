@@ -91,9 +91,9 @@ public class ReviewController {
 			             Model model) {
 		  House house = houseRepository.getReferenceById(houseId);
 	      Review review = reviewRepository.getReferenceById(id);
-	      EditForm EditForm = new EditForm(review.getId(),house.getId(),review.getScore(), review.getScore());
+	      EditForm EditForm = new EditForm(review.getId(),house.getId(),review.getScore(), review.getReview());
 	      model.addAttribute("house", house);
-	      model.addAttribute("EditForm", EditForm);
+	      model.addAttribute("editForm", EditForm);
 	      return "review/edit";
 	  }
 
