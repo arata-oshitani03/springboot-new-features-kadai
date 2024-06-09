@@ -10,6 +10,7 @@ import com.example.samuraitravel.entity.User;
 public interface ReviewRepository extends JpaRepository<Review, Integer> {
 	 Review getReferenceById(Review review);
 	 public Page<Review> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
+	Page<Review> findByHouseId(Integer houseId, Pageable pageable);
 
 	
 }
