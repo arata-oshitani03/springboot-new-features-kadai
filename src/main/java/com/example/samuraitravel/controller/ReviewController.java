@@ -62,7 +62,7 @@ public class ReviewController {
 	  public String register(@PathVariable(name = "houseId") Integer houseId, Model model) {
 	      House house = houseRepository.getReferenceById(houseId);
 	      model.addAttribute("house", house);
-	      model.addAttribute("RegisterForm", new RegisterForm());
+	      model.addAttribute("registerForm", new RegisterForm());
 	      return "review/register";
 	  }
 
@@ -118,8 +118,4 @@ public class ReviewController {
 		   redirectAttributes.addFlashAttribute("successMessage", "レビューを削除しました。");
 		   return "redirect:/houses/{houseId}";
 	  }
-	  
-	  
-
-
 }

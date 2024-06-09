@@ -34,7 +34,7 @@ public class ReviewService {
 		review.setHouse(house);
 		review.setUser(user);
 		review.setScore(RegisterForm.getStar());
-		review.setScore(RegisterForm.getReview());
+		review.setContent(RegisterForm.getReview());
 		reviewRepository.save(review);
 	}
 
@@ -43,7 +43,7 @@ public class ReviewService {
 	public void update(EditForm EditForm) {
 		Review review = reviewRepository.getReferenceById(EditForm.getId());
 		review.setScore(EditForm.getStar());
-		review.setScore(EditForm.getReview());
+		review.setContent(EditForm.getReview());
 		reviewRepository.save(review);
 	}
 

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <div th:replace="~{fragment :: meta}"></div>
+    <div th:replace="~{fragment :: styles}"></div>
+    <title>レビュー登録</title>
+    <style>
+        .star-rating {
+            direction: rtl;
+            display: inline-flex;
+            justify-content: center;
+        }
+
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .star-rating input[type="radio"]:checked ~ label {
+            color: #f5b301;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #f5b301;
+        }
+    </style>
+</head>
+<body>
+    <div class="samuraitravel-wrapper">
+        <div th:replace="~{fragment :: header}"></div>
+
+        <main>
+            <div class="container pt-4 pb-5 samuraitravel-container">
+                <div class="row justify-content-center">
+                    <div class="col-xxl-9 col-xl-10 col-lg-11">
+                        <h1 class="mb-4 text-center">レビュー登録</h1>
+
+                        <form th:action="@{/houses/__${house.getId()}__/review/create}" method="post" th:object="${registerForm}">
+                            <div class="form-group mb-3">
+                                <label for="star" class="form-label">評価</label>
+                                <div class="star-rating">
+                                    <input type="radio" id="star5" th:field="*{star}" value="5">
+                                    <label for="star5">&#9733;</label>
+                                    <input type="radio" id="star4" th:field="*{star}" value="4">
+                                    <label for="star4">&#9733;</label>
+                                    <input type="radio" id="star3" th:field="*{star}" value="3">
+                                    <label for="star3">&#9733;</label>
+                                    <input type="radio" id="star2" th:field="*{star}" value="2">
+                                    <label for="star2">&#9733;</label>
+                                    <input type="radio" id="star1" th:field="*{star}" value="1">
+                                    <label for="star1">&#9733;</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="review" class="form-label">レビュー内容</label>
+                                <textarea class="form-control" th:field="*{review}" id="review" rows="5" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <button type="submit" class="btn text-white shadow-sm w-100 samuraitravel-btn">レビューを登録する</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div th:replace="~{fragment :: footer}"></div>
+    </div>
+
+    <div th:replace="~{fragment :: scripts}"></div>
+</body>
+</html>
