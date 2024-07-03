@@ -6,41 +6,45 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
 import com.example.samuraitravel.entity.User;
-import com.example.samuraitravel.form.ReviewEditForm;
-import com.example.samuraitravel.form.ReviewRegisterForm;
+import com.example.samuraitravel.form.EditForm;
+import com.example.samuraitravel.form.RegisterForm;
+import com.example.samuraitravel.repository.HouseRepository;
 import com.example.samuraitravel.repository.ReviewRepository;
+import com.example.samuraitravel.repository.UserRepository;
 
 @Service
 public class ReviewService {
-    private final ReviewRepository reviewRepository;        
-    
-    public ReviewService(ReviewRepository reviewRepository) {        
-        this.reviewRepository = reviewRepository;        
-    }     
-    
-    @Transactional
-    public void create(House house, User user, ReviewRegisterForm reviewRegisterForm) {
-        Review review = new Review();        
-        
-        review.setHouse(house);                
-        review.setUser(user);
-        review.setScore(reviewRegisterForm.getScore());
-        review.setContent(reviewRegisterForm.getContent());
-                    
-        reviewRepository.save(review);
-    }     
-    
-    @Transactional
-    public void update(ReviewEditForm reviewEditForm) {
-        Review review = reviewRepository.getReferenceById(reviewEditForm.getId());        
-        
-        review.setScore(reviewEditForm.getScore());                
-        review.setContent(reviewEditForm.getContent());
-                    
-        reviewRepository.save(review);
-    }    
-    
-    public boolean hasUserAlreadyReviewed(House house, User user) {
-        return reviewRepository.findByHouseAndUser(house, user) != null;
-    }
+	private final ReviewRepository reviewRepository;
+	private final HouseRepository houseRepository;
+	private final UserRepository userRepository;
+
+	public ReviewService(ReviewRepository reviewRepository, HouseRepository houseRepository,
+			UserRepository userRepository) {
+		this.reviewRepository = reviewRepository;
+		this.houseRepository = houseRepository;
+		this.userRepository = userRepository;
+	}
+	
+	//新規レビューをDBに保存
+	@Transactional
+	public void create(RegisterForm RegisterForm) {
+		Review review = new Review();
+		House house = houseRepository.getReferenceById(RegisterForm.getHouseId());
+		User user = userRepository.getReferenceById(RegisterForm.getUserId());
+		review.setHouse(house);
+		review.setUser(user);
+		review.setScore(RegisterForm.getStar());
+		review.setContent(RegisterForm.getReview());
+		reviewRepository.save(review);
+	}
+
+	//レビューの変更を保存
+	@Transactional
+	public void update(EditForm EditForm) {
+		Review review = reviewRepository.getReferenceById(EditForm.getId());
+		review.setScore(EditForm.getStar());
+		review.setContent(EditForm.getReview());
+		reviewRepository.save(review);
+	}
+
 }

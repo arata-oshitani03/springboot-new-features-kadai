@@ -1,7 +1,5 @@
 package com.example.samuraitravel.controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -16,24 +14,22 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
-import com.example.samuraitravel.entity.User;
+import com.example.samuraitravel.form.FavoriteRegisterForm;
 import com.example.samuraitravel.form.ReservationInputForm;
+import com.example.samuraitravel.repository.FavoriteRepository;
 import com.example.samuraitravel.repository.HouseRepository;
 import com.example.samuraitravel.repository.ReviewRepository;
 import com.example.samuraitravel.security.UserDetailsImpl;
-import com.example.samuraitravel.service.ReviewService;
 
 @Controller
 @RequestMapping("/houses")
 public class HouseController {
 	private final HouseRepository houseRepository;
 	private final ReviewRepository reviewRepository;
-	private final ReviewService reviewService;
 
-	public HouseController(HouseRepository houseRepository, ReviewRepository reviewRepository, ReviewService reviewService) {
+	public HouseController(HouseRepository houseRepository,ReviewRepository reviewRepository) {
 		this.houseRepository = houseRepository;
 		this.reviewRepository = reviewRepository;
-		 this.reviewService = reviewService;
 	}
 
 	@GetMapping
@@ -89,24 +85,27 @@ public class HouseController {
 
 
 	@GetMapping("/{id}")
-	 public String show(@PathVariable(name = "id") Integer id, Model model, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-        House house = houseRepository.getReferenceById(id);        
-        boolean hasUserAlreadyReviewed = false;        
-        
-        if (userDetailsImpl != null) {
-            User user = userDetailsImpl.getUser();
-            hasUserAlreadyReviewed = reviewService.hasUserAlreadyReviewed(house, user);           
-        }
-        
-        List<Review> newReviews = reviewRepository.findTop6ByHouseOrderByCreatedAtDesc(house);        
-        long totalReviewCount = reviewRepository.countByHouse(house);         
-        
-        model.addAttribute("house", house);  
-        model.addAttribute("reservationInputForm", new ReservationInputForm());
-        model.addAttribute("hasUserAlreadyReviewed", hasUserAlreadyReviewed);
-        model.addAttribute("newReviews", newReviews);        
-        model.addAttribute("totalReviewCount", totalReviewCount);        
-        
-        return "houses/show";
-    }    
+	public String show(@PathVariable(name = "id") Integer id,FavoriteRegisterForm favoriteRegisterForm, FavoriteRepository favoriteRepository, Model model, @PageableDefault(page = 0, size = 6, sort = "id", direction = Direction.ASC) Pageable pageable, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
+		/*	    if (userDetailsImpl == null) {
+		    // ユーザーが未認証の場合の処理、例えばログインページへリダイレクト
+		    return "redirect:/login";
+		}*/
+	    //if文で条件分岐
+	    
+		/* User user = userDetailsImpl.getUser();*/
+	    House house = houseRepository.getReferenceById(id);
+	    Page<Review> reviewPage = reviewRepository.findAll(pageable);
+	    Review review = reviewRepository.getReferenceById(id);
+	    ReservationInputForm reservationInputForm = new ReservationInputForm();
+
+	    model.addAttribute("reviewPage", reviewPage);
+	    model.addAttribute("house", house);
+	    model.addAttribute("reservationInputForm", reservationInputForm);
+	    model.addAttribute("review", review);
+		/* model.addAttribute("user", user);*/
+
+	    return "houses/show";
+	}
+
+
 }
