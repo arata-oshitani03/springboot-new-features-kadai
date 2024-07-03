@@ -126,14 +126,6 @@ html {
      max-width: 300px;
  }
  
- .samuraitravel-star {
-    color: #ffa500;
-} 
-
-.samuraitravel-star:focus {
-    color: #ffa500;
-}
- 
  @media screen and (min-width: 1400px) {
    .samuraitravel-container {
      max-width: 1200px;
@@ -165,3 +157,4 @@ html {
 .star-rating label:hover ~ label {
     color: #f5b301;
 }
+
