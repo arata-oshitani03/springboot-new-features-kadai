@@ -2,7 +2,6 @@ package com.example.samuraitravel.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -39,25 +38,17 @@ public class ReviewController {
 		this.houseRepository = houseRepository;
 	}
 
-	// 家の詳細ページ
-	@GetMapping
-	public String index(Model model, @PageableDefault(page = 0, size = 6, sort = "id", direction = Direction.ASC) Pageable pageable) {
-		Page<Review> reviewPage;
-		reviewPage = reviewRepository.findAll(pageable);
-		model.addAttribute("reviewPage", reviewPage);
-		return "houses/show";
-	}
-
 	// レビュー一覧の表示
-	@GetMapping("/table")
-	public String table(@PathVariable(name = "houseId") Integer houseId, Model model, @PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.ASC) Pageable pageable) {
-		Page<Review> reviewPage;
-		reviewPage = reviewRepository.findAll(pageable);
-		House house = houseRepository.getReferenceById(houseId);
-		model.addAttribute("house", house);
-		model.addAttribute("reviewPage", reviewPage);
-		return "review/table";
-	}
+	@GetMapping
+    public String index(@PathVariable(name = "houseId") Integer houseId, @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable, Model model) {
+        House house = houseRepository.getReferenceById(houseId);
+        Page<Review> reviewPage = reviewRepository.findByHouseOrderByCreatedAtDesc(house, pageable);       
+                    
+        model.addAttribute("house", house); 
+        model.addAttribute("reviewPage", reviewPage);                
+        
+        return "review/index";
+    }
 
 	// レビューの投稿
 	@GetMapping("/register")
