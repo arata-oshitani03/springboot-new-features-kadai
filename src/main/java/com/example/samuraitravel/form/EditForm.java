@@ -15,7 +15,7 @@ public class EditForm {
 	
 	private Integer houseId;
 	
-	private String star;
+	private Integer score;
 	
 	private String review;
 

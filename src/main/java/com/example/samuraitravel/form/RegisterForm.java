@@ -13,7 +13,7 @@ public class RegisterForm {
 	
 	private Integer userId;
 	
-	private String star;
+	private Integer score;
 	
 	private String review;
 

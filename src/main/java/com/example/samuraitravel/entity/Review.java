@@ -33,7 +33,7 @@ public class Review {
 	private String content;
 	
 	@Column(name ="score")
-	private String score;
+	private Integer score;
 	
 	
 	@Column(name = "created_at", insertable = false, updatable = false)
@@ -42,10 +42,7 @@ public class Review {
 	@Column(name = "updated_at", insertable = false, updatable = false)
 	private Timestamp updatedAt;
 
-	public String getReview() {
-		// TODO 自動生成されたメソッド・スタブ
-		return null;
-	}
+	
 
 	
 	}
