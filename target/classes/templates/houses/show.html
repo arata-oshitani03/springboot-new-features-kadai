@@ -55,7 +55,9 @@
 
 
 						<h1 class="mb-4 text-center" th:text="${house.getName()}"></h1>
-
+						<div th:if="${successMessage}" class="alert alert-info">
+                             <span th:text="${successMessage}"></span>
+                         </div>  
 						<div th:if="${errorMessage}" class="alert alert-danger">
 							<span th:text="${errorMessage}"></span>
 						</div>
@@ -188,82 +190,60 @@
 									</div>
 								</div>
 								<!--レビューの表示 -->
-								<div class="container">
-									<div class="row">
-										<div class="text-center">
-											<h1>レビュー</h1>
-										</div>
-										<div class="text-center" sec:authorize="isAuthenticated()">
-											<a class="btn text-white shadow-sm w-50 samuraitravel-btn"
-												th:href="@{/houses/__${house.getId()}__/review/register}">レビューを投稿する</a>
-										</div>
-										<div class="container p-3 ">
-											<div class="row">
-												<div class="col-6 pb-3" th:each="review : ${reviewPage}">
-  											  <div class="card">
-       											 <div class="card-body">
-          										  <h3 class="card-title mb-3" th:text="${review.getUser().getName()}"></h3>
+								                             <!-- レビューセクション -->
+                             <div class="container px-0">
+                                 <h2 class="mb-4 text-center">レビュー</h2>
+                                 <div sec:authorize="isAuthenticated()" th:unless="${hasUserAlreadyReviewed}" class="row justify-content-center mb-4">
+                                     <div class="col-lg-4">
+                                         <a th:href="@{/houses/__${house.getId()}__/review/register}" class="btn text-white shadow-sm w-100 samuraitravel-btn">レビューを投稿する</a>
+                                     </div>
+                                 </div>
+                                 <div th:if="${#lists.isEmpty(newReviews)}" class="mb-4">                                    
+                                     <p class="text-center">まだレビューがありません。</p>                                    
+                                 </div>                                                                 
+                                 <div th:unless="${#lists.isEmpty(newReviews)}" class="row row-cols-1 row-cols-md-2 g-4 mb-4">
+                                     <div th:each="review : ${newReviews}">
+                                         <div class="col">
+                                             <div class="card">
+                                                 <div class="card-body">
+                                                     <div class="d-flex justify-content-between">
+                                                         <h5 class="card-title" th:text="${review.getUser().getName()}"></h5>
+                                                         <span sec:authorize="isAuthenticated()" th:if="${#authentication.principal.user.id == review.getUser().getId()}">
+                                                             <a th:href="@{/houses/__${house.getId()}__/review/__${review.getId()}__/edit}" class="me-2">編集</a>
+                                                             <a href="#" class="samuraitravel-link-danger" data-bs-toggle="modal" th:data-bs-target="${'#deleteReviewModal' + review.getId()}">削除</a>
+                                                             <!-- 削除用モーダル -->
+                                                             <div class="modal fade" th:id="${'deleteReviewModal' + review.getId()}" tabindex="-1" th:aria-labelledby="${'deleteReviewModalLabel' + review.getId()}">
+                                                                 <div class="modal-dialog">
+                                                                     <div class="modal-content">
+                                                                         <div class="modal-header">
+                                                                             <h5 class="modal-title" th:id="${'deleteReviewModalLabel' + review.getId()}" th:text="${house.getName() + 'のレビューを削除してもよろしいですか？'}"></h5>
+                                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
+                                                                         </div>
+                                                                         <div class="modal-footer">
+                                                                             <form method="post"th:action="@{/houses/__${house.getId()}__/review/__${review.getId()}__/delete}">
+                                                                                 <button type="submit" class="btn samuraitravel-btn-danger text-white shadow-sm">削除</button>
+                                                                             </form>
+                                                                         </div>
+                                                                     </div>
+                                                                 </div>
+                                                             </div>                                                                                                            
+                                                         </span>      
+                                                     </div>                                              
+                                                     <p class="card-text mb-1">
+                                                         <span class="samuraitravel-star" th:each="star : ${#numbers.sequence(1, 5)}" th:text="${star <= review.getScore()} ? '&#9733;' : '&#9734;'"></span>
+                                                     </p>                      
+                                                     <p class="card-text"><small class="text-muted" th:text="${#dates.format(review.getCreatedAt(), 'yyyy年MM月dd日')}"></small></p>                              
+                                                     <p class="card-text" th:text="${review.getContent()}"></p>
+                                                 </div>
+                                             </div>
+                                         </div>
+                                     </div>                                     
+                                 </div>    
+                                 <div class="text-center mb-4" th:if="${totalReviewCount > 6}">
+                                     <a th:href="@{/houses/__${house.getId()}__/review}">すべてのレビューを見る</a>
+                                 </div>                                                            
+                             </div>                              
 
-          										  <div sec:authorize="isAuthenticated()" th:if="${review.getUser().getId()} == ${#authentication.principal.user.id}">
-            									    <a class="text-right" th:href="@{/houses/__${house.getId()}__/review/__${review.getId()}__/edit}">編集</a>
-           										     <a th:href="@{/houses/__${house.getId()}__/review/__${review.getId()}__/delete}"
-            									       class="samuraitravel-link-danger"
-       										            data-bs-toggle="modal"
-           										        th:data-bs-target="${'#deleteReviewModal' + review.getId()}">削除</a>
-        										    </div>
-
-         										   <p class="card-text mb-2">
-          										      <small class="text-muted" th:text="${review.getCreatedAt()}"></small>
-          											  </p>
-          											  <p class="card-text">
-            										    <span th:if="${review.getScore()=='1'}">&#9733;&#9734;&#9734;&#9734;&#9734;</span> 
-              											<span th:if="${review.getScore()=='2'}">&#9733;&#9733;&#9734;&#9734;&#9734;</span>
-              											<span th:if="${review.getScore()=='3'}">&#9733;&#9733;&#9733;&#9734;&#9734;</span>
-              											  <span th:if="${review.getScore()=='4'}">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
-               											 <span th:if="${review.getScore()=='5'}">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-          											  </p>
-         											   <p class="card-text">
-            										    <h8 class="card-text mb-3" th:text="${review.getContent()}"></h8>
-        											    </p>
-
-    											    </div>
-   												 </div>
-												</div>
-
-											</div>
-											<div class="text-center">
-　　											<a th:href="@{/houses/__${house.getId()}__/review}">すべてのレビューを見る</a>
-											</div>
-
-											<!--  削除用モーダル -->
-											<div class="modal fade" th:id="${'deleteReviewModal' + review.getId()}"
-												tabindex="-1"
-												th:aria-labelledby="${'deleteReviewModal' + review.getId()}">
-												<div class="modal-dialog">
-													<div class="modal-content">
-														<div class="modal-header">
-															<h5 class="modal-title"
-																th:id="${'deleteReviewModal' + review.getId()}"
-																th:text="${house.getName() + 'のレビューを削除してもよろしいですか？'}">
-															</h5>
-															<button type="button" class="btn-close"
-																data-bs-dismiss="modal" aria-label="閉じる"></button>
-														</div>
-														<div class="modal-footer">
-															<form method="get"
-																th:action="@{/houses/__${house.getId()}__/review/__${review.getId()}__/delete}">
-
-																<button type="submit"
-																	class="btn samuraitravel-btn-danger text-white shadow-sm">削除</button>
-															</form>
-														</div>
-													</div>
-												</div>
-											</div>
-
-										</div>
-									</div>
-								</div>
 							</div>
 						</div>
 					</div>
